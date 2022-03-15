@@ -31,15 +31,11 @@ func main() {
 	if len(os.Args) > 1 {
 		subCommand := os.Args[1]
 
-		// var command [5]string
 		command := []string{"create", "get", "find", "update", "delete"}
 
-		if !CommandHas(command, subCommand) { // command invalid
+		if !CommandHas(command, subCommand) {
 			fmt.Println("Please provide a valid command. Available commands are create,get,find,update,delete")
 		} else {
-			// if subCommand == "create"{
-			// 	Create()
-			// }
 			switch subCommand {
 			case "create":
 				Create(db)

@@ -27,7 +27,6 @@ func CreateConnection() *sql.DB {
 	if err != nil {
 		panic(err)
 	}
-	// sqldb := db.DB()
 	err = db.Ping()
 
 	if err != nil {
@@ -53,7 +52,6 @@ func CreatePost(db *sql.DB, jp JobPost) {
 }
 
 func GetPost(db *sql.DB, id int) JobPost {
-	// fmt.Println("Get not implemented")
 
 	connection := CreateConnection()
 	defer connection.Close()
@@ -75,7 +73,6 @@ func FindPost(db *sql.DB, company string) JobPost {
 
 	connection := CreateConnection()
 	defer connection.Close()
-	// fmt.Println("Find not implemented")
 	tx, _ := db.Begin()
 	stmt, _ := tx.Prepare("select * from JOBCREATE where company=?")
 	_, err := stmt.Exec(company)
