@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -42,12 +41,32 @@ func GetPost(db *sql.DB, id int) JobPost {
 	}
 	return JobPost{}
 }
-func FindPost() {
-	fmt.Println("Find not implemented")
+func FindPost(db *sql.DB, company string) JobPost {
+	// fmt.Println("Find not implemented")
+	rows, err := db.Query("select * from JOBCREATE where company=?")
+	checkError(err)
+	for rows.Next() {
+		var Post JobPost
+		err = rows.Scan(&Post.id, &Post.company, &Post.age, &Post.address, &Post.salary)
+		checkError(err)
+		if Post.company == company {
+			return Post
+		}
+	}
+	return JobPost{}
+
 }
-func UpdatePost() {
-	fmt.Println("Update not implemented")
+func UpdatePost(db *sql.DB, id int, jp JobPost) {
+	tx, _ := db.Begin()
+	stmt, _ := tx.Prepare("update JOBCREATE set jp.company=?,jp.age=?,jp.address=?,jp.salary=? where jp.id=?")
+	_, err := stmt.Exec(&jp.id, &jp.company, &jp.age, &jp.address, id)
+	checkError(err)
+	tx.Commit()
 }
-func DeletePost() {
-	fmt.Println("Delete not implemented")
+func DeletePost(db *sql.DB, id int) {
+	tx, _ := db.Begin()
+	stmt, _ := tx.Prepare("delete from JOBCREATE where id=?")
+	_, err := stmt.Exec(id)
+	checkError(err)
+	tx.Commit()
 }
