@@ -55,6 +55,9 @@ func main() {
 }
 
 func Create() {
+	// user input
+	// input sanitize
+	// db send
 	fmt.Println("Create not implemented")
 }
 func Get() {
