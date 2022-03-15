@@ -12,7 +12,7 @@ func TestSliceHas(t *testing.T) {
 	}
 
 	for needle, expectation := range expected {
-		output := SliceHas(hay, needle)
+		output := CommandHas(hay, needle)
 		if output != expectation {
 			t.Fatalf("for input=%s, expected=%v, but received=%v", needle, expectation, output)
 		}
