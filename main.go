@@ -69,13 +69,13 @@ func Get(db *sql.DB) {
 	id := os.args[2]
 	jp := GetPost(db, id)
 }
-func Find(db *sql.DB, company string) {
+func Find(db *sql.DB) {
 	FindPost(db, company)
 }
 func Update(db *sql.DB) {
 	previousjp := GetPost(id)
 	UpdatePost(db, id, jp)
 }
-func Delete(db *sql.DB, id int) {
+func Delete(db *sql.DB) {
 	DeletePost(db, id)
 }
