@@ -23,6 +23,7 @@ func main() {
 	// todo: if an unknown command is provided, warn user: R
 	// todo: make a func for each subcommand of the same name like func create() etc and call them appropriately: R
 	// todo: define every subcommand func to print "<command-name> not implemented"
+
 	if len(os.Args) > 1 {
 		subCommand := os.Args[1]
 
