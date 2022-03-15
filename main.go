@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"os"
 )
@@ -18,11 +19,14 @@ func CommandHas(hay []string, needle string) bool {
 }
 
 func main() {
+	db := CreateConnection()
+	db.Exec("create table if not exists JOBCOMPANY(id integer, company char, age integer, address char, salary integer)")
 	// todo: print the subcommand supplied by the user: X
 	// todo: if no sub command provided, warn user: R
 	// todo: if an unknown command is provided, warn user: R
 	// todo: make a func for each subcommand of the same name like func create() etc and call them appropriately: R
-	// todo: define every subcommand func to print "<command-name> not implemented"
+	// todo: define every subcommand func to print "<command-name> not implemented": R
+	// todo: create func for db calls
 
 	if len(os.Args) > 1 {
 		subCommand := os.Args[1]
@@ -38,15 +42,15 @@ func main() {
 			// }
 			switch subCommand {
 			case "create":
-				Create()
+				Create(db)
 			case "get":
-				Get()
+				Get(db)
 			case "find":
-				Find()
+				Find(db)
 			case "update":
-				Update()
+				Update(db)
 			case "delete":
-				Delete()
+				Delete(db)
 			}
 		}
 	} else {
@@ -54,21 +58,24 @@ func main() {
 	}
 }
 
-func Create() {
+func Create(db *sql.DB) {
 	// user input
 	// input sanitize
 	// db send
-	fmt.Println("Create not implemented")
+	CreatePost(db, jp)
 }
-func Get() {
-	fmt.Println("Get not implemented")
+
+func Get(db *sql.DB) {
+	id := os.args[2]
+	jp := GetPost(db, id)
 }
-func Find() {
-	fmt.Println("Find not implemented")
+func Find(db *sql.DB, company string) {
+	FindPost(db, company)
 }
-func Update() {
-	fmt.Println("Update not implemented")
+func Update(db *sql.DB) {
+	previousjp := GetPost(id)
+	UpdatePost(db, id, jp)
 }
-func Delete() {
-	fmt.Println("Delete not implemented")
+func Delete(db *sql.DB, id int) {
+	DeletePost(db, id)
 }
