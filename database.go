@@ -8,11 +8,11 @@ import (
 )
 
 type JobPost struct {
-	Id      int
-	Company string
-	Age     int
-	Address string
-	Salary  int
+	id      int
+	company string
+	age     int
+	address string
+	salary  int
 }
 
 func checkError(err error) {
@@ -23,8 +23,8 @@ func checkError(err error) {
 
 func CreatePost(db *sql.DB, jp JobPost) {
 	tx, _ := db.Begin()
-	stmt, _ := tx.Prepare("insert into JOBCREATE (jp.Id,jp.Company,jp.Age,jp.Address,jp.Salary) values (?,?,?,?,?)")
-	_, err := stmt.Exec(&jp.Id, &jp.Company, &jp.Age, &jp.Address, &jp.Salary)
+	stmt, _ := tx.Prepare("insert into JOBCREATE (jp.id,jp.company,jp.age,jp.address,jp.salary) values (?,?,?,?,?)")
+	_, err := stmt.Exec(&jp.id, &jp.company, &jp.age, &jp.address, &jp.salary)
 	checkError(err)
 	tx.Commit()
 }
@@ -34,9 +34,9 @@ func GetPost(db *sql.DB, id int) JobPost {
 	checkError(err)
 	for rows.Next() {
 		var Post JobPost
-		err = rows.Scan(&Post.Id, &Post.Company, &Post.Age, &Post.Address, &Post.Salary)
+		err = rows.Scan(&Post.id, &Post.company, &Post.age, &Post.address, &Post.salary)
 		checkError(err)
-		if Post.Id == id {
+		if Post.id == id {
 			return Post
 		}
 	}
