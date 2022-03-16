@@ -15,101 +15,137 @@ type JobPost struct {
 	salary  int
 }
 
-func checkError(err error) {
-	if err != nil {
-		panic(err)
-	}
-}
-
-func CreateConnection() *sql.DB {
+func CreateConnection() (*sql.DB, error) {
 	db, err := sql.Open("sqlite3", "JobPost.db")
 
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	err = db.Ping()
 
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	fmt.Println("Successfully connected!")
 
-	return db
+	return db, nil
 
 }
 
-func CreatePost(db *sql.DB, jp JobPost) {
+func CreatePost(db *sql.DB, jp JobPost) error {
 
-	connection := CreateConnection()
+	connection, err := CreateConnection()
+	if err != nil {
+		return err
+	}
+
 	defer connection.Close()
 
 	tx, _ := db.Begin()
 	stmt, _ := tx.Prepare("insert into JOBCREATE (id,company,age,address,salary) values (?,?,?,?,?)")
-	_, err := stmt.Exec(&jp.id, &jp.company, &jp.age, &jp.address, &jp.salary)
-	checkError(err)
+	_, err = stmt.Exec(&jp.id, &jp.company, &jp.age, &jp.address, &jp.salary)
+
+	if err != nil {
+		return err
+	}
+
 	tx.Commit()
+
+	return err
 }
 
-func GetPost(db *sql.DB, id int) JobPost {
+func GetPost(db *sql.DB, id int) (JobPost, error) {
 
-	connection := CreateConnection()
+	connection, err := CreateConnection()
+
+	if err != nil {
+		return JobPost{}, err
+	}
+
 	defer connection.Close()
 
 	rows, err := db.Query("select * from JOBCREATE")
-	checkError(err)
+
+	if err != nil {
+		return JobPost{}, err
+	}
 	for rows.Next() {
 		var Post JobPost
 		err = rows.Scan(&Post.id, &Post.company, &Post.age, &Post.address, &Post.salary)
-		checkError(err)
+
+		if err != nil {
+			return JobPost{}, err
+		}
+
 		if Post.id == id {
-			return Post
+			return Post, nil
 		}
 	}
-	return JobPost{}
+	return JobPost{}, nil
 }
 
-func FindPost(db *sql.DB, company string) JobPost {
+func FindPost(db *sql.DB, company string) (JobPost, error) {
 
-	connection := CreateConnection()
+	connection, _ := CreateConnection()
 	defer connection.Close()
 	tx, _ := db.Begin()
 	stmt, _ := tx.Prepare("select * from JOBCREATE where company=?")
-	_, err := stmt.Exec(company)
+	rows, err := stmt.Query(company)
 
-	checkError(err)
+	if err != nil {
+		return JobPost{}, err
+	}
 	for rows.Next() {
 		var Post JobPost
 		err = rows.Scan(&Post.id, &Post.company, &Post.age, &Post.address, &Post.salary)
-		checkError(err)
+		if err != nil {
+			return JobPost{}, err
+		}
 		if Post.company == company {
-			return Post
+			return Post, err
 		}
 	}
-	return JobPost{}
+	return JobPost{}, err
 
 }
 
-func UpdatePost(db *sql.DB, id int, jp JobPost) {
+func UpdatePost(db *sql.DB, id int, jp JobPost) (JobPost, error) {
 
-	connection := CreateConnection()
+	connection, err := CreateConnection()
+
+	if err != nil {
+		return JobPost{}, err
+	}
+
 	defer connection.Close()
 
 	tx, _ := db.Begin()
 	stmt, _ := tx.Prepare("update JOBCREATE set company=?,age=?,address=?,salary=? where id=?")
-	_, err := stmt.Exec(&jp.id, &jp.company, &jp.age, &jp.address, id)
-	checkError(err)
+	_, err = stmt.Exec(&jp.id, &jp.company, &jp.age, &jp.address, id)
+	if err != nil {
+		return JobPost{}, err
+	}
 	tx.Commit()
+
+	return JobPost{}, err
 }
 
-func DeletePost(db *sql.DB, id int) {
+func DeletePost(db *sql.DB, id int) error {
 
-	connection := CreateConnection()
+	connection, err := CreateConnection()
+	if err != nil {
+		return err
+	}
 	defer connection.Close()
 
 	tx, _ := db.Begin()
 	stmt, _ := tx.Prepare("delete from JOBCREATE where id=?")
-	_, err := stmt.Exec(id)
-	checkError(err)
+	_, err = stmt.Exec(id)
+	if err != nil {
+		return err
+	}
 	tx.Commit()
+
+	return err
 }

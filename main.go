@@ -19,7 +19,10 @@ func CommandHas(hay []string, needle string) bool {
 }
 
 func main() {
-	db := CreateConnection()
+	db, err := CreateConnection()
+	if err != nil {
+		panic(err)
+	}
 	db.Exec("create table if not exists JOBCOMPANY(id integer, company char, age integer, address char, salary integer)")
 	// todo: print the subcommand supplied by the user: X
 	// todo: if no sub command provided, warn user: R
@@ -58,20 +61,20 @@ func Create(db *sql.DB) {
 	// user input
 	// input sanitize
 	// db send
-	CreatePost(db, jp)
+	// CreatePost(db, jp)
 }
 
 func Get(db *sql.DB) {
-	id := os.args[2]
-	jp := GetPost(db, id)
+	// id := os.args[2]
+	// jp := GetPost(db, id)
 }
 func Find(db *sql.DB) {
-	FindPost(db, company)
+	// FindPost(db, company)
 }
 func Update(db *sql.DB) {
-	previousjp := GetPost(id)
-	UpdatePost(db, id, jp)
+	// 	previousjp := GetPost(id)
+	// 	UpdatePost(db, id, jp)
 }
 func Delete(db *sql.DB) {
-	DeletePost(db, id)
+	// DeletePost(db, id)
 }

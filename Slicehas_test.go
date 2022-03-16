@@ -2,7 +2,7 @@ package main
 
 import "testing"
 
-func TestSliceHas(t *testing.T) {
+func TestCommandHas(t *testing.T) {
 	hay := []string{"a", "b", "c"}
 	expected := map[string]bool{
 		"a": true,
