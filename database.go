@@ -42,8 +42,15 @@ func CreatePost(db *sql.DB, jp JobPost) error {
 
 	defer connection.Close()
 
-	tx, _ := db.Begin()
-	stmt, _ := tx.Prepare("insert into JOBCREATE (id,company,age,address,salary) values (?,?,?,?,?)")
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+
+	stmt, err := tx.Prepare("insert into JOBCOMPANY (id,company,age,address,salary) values (?,?,?,?,?)")
+	if err != nil {
+		return err
+	}
 	_, err = stmt.Exec(&jp.id, &jp.company, &jp.age, &jp.address, &jp.salary)
 
 	if err != nil {
@@ -65,11 +72,20 @@ func GetPost(db *sql.DB, id int) (JobPost, error) {
 
 	defer connection.Close()
 
-	rows, err := db.Query("select * from JOBCREATE")
-
+	tx, err := db.Begin()
 	if err != nil {
 		return JobPost{}, err
 	}
+	stmt, err := tx.Prepare("select * from JOBCOMPANY where id=?")
+	if err != nil {
+		return JobPost{}, err
+	}
+
+	rows, err := stmt.Query(id)
+	if err != nil {
+		return JobPost{}, err
+	}
+
 	for rows.Next() {
 		var Post JobPost
 		err = rows.Scan(&Post.id, &Post.company, &Post.age, &Post.address, &Post.salary)
@@ -89,13 +105,21 @@ func FindPost(db *sql.DB, company string) (JobPost, error) {
 
 	connection, _ := CreateConnection()
 	defer connection.Close()
-	tx, _ := db.Begin()
-	stmt, _ := tx.Prepare("select * from JOBCREATE where company=?")
-	rows, err := stmt.Query(company)
 
+	tx, err := db.Begin()
 	if err != nil {
 		return JobPost{}, err
 	}
+	stmt, err := tx.Prepare("select * from JOBCOMPANY where company=?")
+	if err != nil {
+		return JobPost{}, err
+	}
+
+	rows, err := stmt.Query(company)
+	if err != nil {
+		return JobPost{}, err
+	}
+
 	for rows.Next() {
 		var Post JobPost
 		err = rows.Scan(&Post.id, &Post.company, &Post.age, &Post.address, &Post.salary)
@@ -120,8 +144,15 @@ func UpdatePost(db *sql.DB, id int, jp JobPost) (JobPost, error) {
 
 	defer connection.Close()
 
-	tx, _ := db.Begin()
-	stmt, _ := tx.Prepare("update JOBCREATE set company=?,age=?,address=?,salary=? where id=?")
+	tx, err := db.Begin()
+	if err != nil {
+		return JobPost{}, err
+	}
+
+	stmt, err := tx.Prepare("update JOBCOMPANY set company=?,age=?,address=?,salary=? where id=?")
+	if err != nil {
+		return JobPost{}, err
+	}
 	_, err = stmt.Exec(&jp.id, &jp.company, &jp.age, &jp.address, id)
 	if err != nil {
 		return JobPost{}, err
@@ -139,8 +170,16 @@ func DeletePost(db *sql.DB, id int) error {
 	}
 	defer connection.Close()
 
-	tx, _ := db.Begin()
-	stmt, _ := tx.Prepare("delete from JOBCREATE where id=?")
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+
+	stmt, err := tx.Prepare("delete from JOBCOMPANY where id=?")
+	if err != nil {
+		return err
+	}
+
 	_, err = stmt.Exec(id)
 	if err != nil {
 		return err
