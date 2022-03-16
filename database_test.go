@@ -24,8 +24,11 @@ func TestDatabase(t *testing.T) {
 		t.Fatalf("GetPost is not working.")
 	}
 
-	// Post, err := FindPost(db, "dsads")
-	// if err != nil {
-	// 	t.Fatalf("FindPost is not working.")
-	// }
+	post, err := FindPost(db, "dsads")
+	if err != nil {
+		t.Fatalf("FindPost is not working.")
+	}
+	if post.id != 1 {
+		t.Fatalf("Incorrect ID in FindPost")
+	}
 }
