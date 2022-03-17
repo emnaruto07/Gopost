@@ -159,13 +159,3 @@ func DeletePost(db *sql.DB, id int) error {
 
 	return err
 }
-
-// === RUN   TestCommandHas
-// --- PASS: TestCommandHas (0.00s)
-// === RUN   TestDatabase
-// Successfully connected!
-//     database_test.go:35: Incorrect ID in FindPost.
-// --- FAIL: TestDatabase (0.00s)
-// FAIL
-// FAIL    gopost  0.009s
-// FAIL
