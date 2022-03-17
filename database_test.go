@@ -23,7 +23,7 @@ func TestDatabase(t *testing.T) {
 	if err != nil {
 		t.Fatalf("GetPost is not working.")
 	}
-	if gp.id != 4 {
+	if gp.id != 1 {
 		t.Fatalf("Not able to fetch data from getpost function.")
 	}
 

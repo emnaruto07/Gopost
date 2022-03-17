@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"strconv"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -35,13 +36,6 @@ func CreateConnection() (*sql.DB, error) {
 
 func CreatePost(db *sql.DB, jp JobPost) error {
 
-	connection, err := CreateConnection()
-	if err != nil {
-		return err
-	}
-
-	defer connection.Close()
-
 	tx, err := db.Begin()
 	if err != nil {
 		return err
@@ -64,13 +58,7 @@ func CreatePost(db *sql.DB, jp JobPost) error {
 
 func GetPost(db *sql.DB, id int) (JobPost, error) {
 
-	connection, err := CreateConnection()
-
-	if err != nil {
-		return JobPost{}, err
-	}
-
-	defer connection.Close()
+	i := strconv.Itoa(id)
 
 	tx, err := db.Begin()
 	if err != nil {
@@ -81,7 +69,7 @@ func GetPost(db *sql.DB, id int) (JobPost, error) {
 		return JobPost{}, err
 	}
 
-	rows, err := stmt.Query(id)
+	rows, err := stmt.Query(i)
 	if err != nil {
 		return JobPost{}, err
 	}
@@ -98,13 +86,10 @@ func GetPost(db *sql.DB, id int) (JobPost, error) {
 			return Post, nil
 		}
 	}
-	return JobPost{}, nil
+	return JobPost{}, err
 }
 
 func FindPost(db *sql.DB, company string) (JobPost, error) {
-
-	connection, _ := CreateConnection()
-	defer connection.Close()
 
 	tx, err := db.Begin()
 	if err != nil {
@@ -136,14 +121,6 @@ func FindPost(db *sql.DB, company string) (JobPost, error) {
 
 func UpdatePost(db *sql.DB, id int, jp JobPost) (JobPost, error) {
 
-	connection, err := CreateConnection()
-
-	if err != nil {
-		return JobPost{}, err
-	}
-
-	defer connection.Close()
-
 	tx, err := db.Begin()
 	if err != nil {
 		return JobPost{}, err
@@ -164,12 +141,6 @@ func UpdatePost(db *sql.DB, id int, jp JobPost) (JobPost, error) {
 
 func DeletePost(db *sql.DB, id int) error {
 
-	connection, err := CreateConnection()
-	if err != nil {
-		return err
-	}
-	defer connection.Close()
-
 	tx, err := db.Begin()
 	if err != nil {
 		return err
@@ -188,3 +159,13 @@ func DeletePost(db *sql.DB, id int) error {
 
 	return err
 }
+
+// === RUN   TestCommandHas
+// --- PASS: TestCommandHas (0.00s)
+// === RUN   TestDatabase
+// Successfully connected!
+//     database_test.go:35: Incorrect ID in FindPost.
+// --- FAIL: TestDatabase (0.00s)
+// FAIL
+// FAIL    gopost  0.009s
+// FAIL
