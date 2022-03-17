@@ -121,6 +121,8 @@ func FindPost(db *sql.DB, company string) (JobPost, error) {
 
 func UpdatePost(db *sql.DB, id int, jp JobPost) (JobPost, error) {
 
+	i := strconv.Itoa(id)
+
 	tx, err := db.Begin()
 	if err != nil {
 		return JobPost{}, err
@@ -130,7 +132,7 @@ func UpdatePost(db *sql.DB, id int, jp JobPost) (JobPost, error) {
 	if err != nil {
 		return JobPost{}, err
 	}
-	_, err = stmt.Exec(&jp.id, &jp.company, &jp.age, &jp.address, id)
+	_, err = stmt.Exec(&jp.company, &jp.age, &jp.address, &jp.salary, i)
 	if err != nil {
 		return JobPost{}, err
 	}
@@ -140,6 +142,8 @@ func UpdatePost(db *sql.DB, id int, jp JobPost) (JobPost, error) {
 }
 
 func DeletePost(db *sql.DB, id int) error {
+
+	// i := strconv.Itoa(id)
 
 	tx, err := db.Begin()
 	if err != nil {

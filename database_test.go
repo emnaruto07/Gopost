@@ -13,25 +13,38 @@ func TestDatabase(t *testing.T) {
 		t.Fatalf("tables are not created")
 	}
 
-	err = CreatePost(db, JobPost{1, "test44", 22, "sadkfdsfh45dsa", 43000})
+	err = CreatePost(db, JobPost{2, "test44", 22, "sadkfdsfh45dsa", 43000})
 
 	if err != nil {
 		t.Fatalf("Createpost is not working. %s", err.Error())
 	}
 
-	gp, err := GetPost(db, 1)
+	gp, err := GetPost(db, 2)
 	if err != nil {
 		t.Fatalf("GetPost is not working.")
 	}
-	if gp.id != 1 {
+	if gp.id != 2 {
 		t.Fatalf("Not able to fetch data from getpost function.")
 	}
 
-	post, err := FindPost(db, "dsads")
+	// post, err := FindPost(db, "dsads")
+	// if err != nil {
+	// 	t.Fatalf("FindPost is not working.")
+	// }
+	// if post.company != "test44" {
+	// 	t.Fatalf("Incorrect ID in FindPost.")
+	// }
+
+	Upost, err := UpdatePost(db, 2, JobPost{2, "test56", 23, "dassasad", 34300})
 	if err != nil {
-		t.Fatalf("FindPost is not working.")
+		t.Fatalf("UpdatePost is not working. %s", err)
 	}
-	if post.company != "test44" {
-		t.Fatalf("Incorrect ID in FindPost.")
+	if Upost.company != "test56" {
+		t.Fatalf("Data has been not updated")
+	}
+
+	err = DeletePost(db, 2)
+	if err != nil {
+		t.Fatalf("Post Not deleted. %s", err)
 	}
 }
