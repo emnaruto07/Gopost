@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"database/sql"
 	"fmt"
 	"os"
+	"strconv"
 )
 
 func CommandHas(hay []string, needle string) bool {
@@ -57,24 +59,39 @@ func main() {
 	}
 }
 
+var jp JobPost
+
 func Create(db *sql.DB) {
 	// user input
 	// input sanitize
 	// db send
-	// CreatePost(db, jp)
+
+	scanner := bufio.NewScanner(os.Stdin)
+
+	CreatePost(db, jp)
 }
 
 func Get(db *sql.DB) {
-	// id := os.args[2]
-	// jp := GetPost(db, id)
+	id := os.Args[2]
+	i, err := strconv.Atoi(id)
+	if err != nil {
+		panic(err)
+	}
+	jp, _ = GetPost(db, i)
 }
 func Find(db *sql.DB) {
-	// FindPost(db, company)
+	company := os.Args[2]
+	FindPost(db, company)
 }
 func Update(db *sql.DB) {
 	// 	previousjp := GetPost(id)
 	// 	UpdatePost(db, id, jp)
 }
 func Delete(db *sql.DB) {
-	// DeletePost(db, id)
+	id := os.Args[2]
+	i, err := strconv.Atoi(id)
+	if err != nil {
+		panic(err)
+	}
+	DeletePost(db, i)
 }
